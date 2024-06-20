@@ -22,7 +22,7 @@
             a.click()
         }, 1000)
     }
-
+    // Create an Array of bytes from the file
     async function readFile(file: File): Promise<Uint8Array> {
         return new Promise(resolve => {
             const fileReader = new FileReader()
@@ -57,17 +57,22 @@
     async function convertImages(imgs: FileList) {
         state = 'convert.start'
         const len: number = imgs.length
+        // Write each file in memory
         for (let i = 0; i < imgs.length; i++) {
             const imageData = await readFile(imgs[i])
             await ffmpeg.writeFile(`input${i}.png`, imageData)
         }
 
         console.log('input files created')
+        // Use ffmpeg to transform the images into a gif
         await ffmpeg.exec(['-framerate', `${calculateFramerate(len,len)}`,
                             '-i', `input%d.png`,
                             'output.gif'])
         console.log('output gif created');
-        console.log(ffmpeg.listDir('./'))
+
+        // -- checks what is written in memory
+        //console.log(ffmpeg.listDir('./'))
+
         const data = await ffmpeg.readFile('output.gif')
         console.log('data created');
         state = 'convert.done'
@@ -184,6 +189,7 @@ class= "drop"
 </div>
 
 <style>
+
     .title {
         text-align: center;
     }
