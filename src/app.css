@@ -1,7 +1,7 @@
 
 :root{
-    --bg-clr: hsl(220 10% 10%);
-    --txt-clr: hsl(220 10% 98%);
+    --bg-clr: hsl(220, 10%, 10%);
+    --txt-clr: hsl(220, 10%, 98%);
 }
 
 html,
@@ -20,18 +20,18 @@ body {
 }
 
 :has([data-state='convert.start']) {
-    --txt-clr: hsl(0 0% 0%)
-    --bg-clr: hsl(60 100% 50%)
+    --txt-clr: hsl(0, 0%, 0%)
+    --bg-clr: hsl(60, 100%, 50%)
 }
 
 :has([data-state='convert.error']) {
-    --txt-clr: hsl(0 0% 0%)
-    --bg-clr: hsl(10 100% 50%)
+    --txt-clr: hsl(0, 0%, 0%)
+    --bg-clr: hsl(10, 100%, 50%)
 }
 
 :has([data-state='convert.done']) {
-    --txt-clr: hsl(0 0% 0%)
-    --bg-clr: hsl(146 100% 50%)
+    --txt-clr: hsl(0, 0%, 0%)
+    --bg-clr: hsl(146, 100%, 50%)
 }
 
 

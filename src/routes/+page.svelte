@@ -13,10 +13,10 @@
     let ffmpeg: FFmpeg
     let progress = tweened(0)
 
-    function downloadVideo(data: Uint8Array) {
+    function downloadVideo(data: Uint8Array, type: string) {
         const a = document.createElement('a')
         a.href = URL.createObjectURL(new Blob([data.buffer], {type: 'video/mp4'}))
-        a.download = 'video.mp4'
+        a.download = `video.${type}`
 
         setTimeout(() => {
             a.click()
@@ -54,22 +54,65 @@
         return data as Uint8Array  
     }
 
-    async function handleDrop(event: DragEvent) {
-        if (!event.dataTransfer) return
-        // probably will have to change this if i want to turn images into gif
+    async function convertImages(imgs: FileList) {
+        state = 'convert.start'
+        const len: number = imgs.length
+        for (let i = 0; i < imgs.length; i++) {
+            const imageData = await readFile(imgs[i])
+            await ffmpeg.writeFile(`input${i}.png`, imageData)
+        }
 
-        if (event.dataTransfer?.files.length > 1) {
-            error = 'Upload one file !!!'
+        console.log('input files created')
+        await ffmpeg.exec(['-framerate', `${calculateFramerate(len,len)}`,
+                            '-i', `input%d.png`,
+                            'output.gif'])
+        console.log('output gif created');
+        console.log(ffmpeg.listDir('./'))
+        const data = await ffmpeg.readFile('output.gif')
+        console.log('data created');
+        state = 'convert.done'
+        return data as Uint8Array
+    }
+
+    function checkFilesType(files: FileList) {
+        for (let i = 0; i< files.length; i++) {
+            if (files[i].type != "image/png") 
+            {
+                error = "Not all files given are pngs"; 
+                return;
+            }
+        }
+        return true
+    }
+
+    function calculateFramerate(numImages: number, duration: number) {
+        return Math.ceil(numImages/duration)
+    }
+
+    async function handleDrop(event: DragEvent) {
+        const data = event.dataTransfer
+        if (!data) return
+
+        const files = data.files
+        if (files.length > 1 && checkFilesType(files)) {
+            error = ""
+            const imagesList: FileList =  event.dataTransfer.files
+            
+            const data = await convertImages(imagesList)
+            downloadVideo(data, 'gif')
+            
 
         }
 
-        if (event.dataTransfer.files[0].type == "video/webm") {
+        else if (files[0].type == "video/webm") {
             error = ""
+            console.log(files)
             const [file] = event.dataTransfer.files
             const data = await convertVideo(file)
-            downloadVideo(data)
-        } else {
-            error = "Only WebM is supported"
+            downloadVideo(data, 'mp4')
+
+        } else if (error != "") {
+            error = "Only WebM and png image sequence are supported"
         }
     }
 
@@ -90,13 +133,13 @@
         state = 'loaded'
     }
 
-    onMount(() => {
+    onMount(async () => {
         loadFFmepg()
     })
     $: console.log(state)
 </script>
 
-<h1 class="title">WebM to MP4 converter</h1>
+<h1 class="title">Online video converter</h1>
 
 
 
@@ -159,15 +202,16 @@ class= "drop"
             text-align: center;
 
             &.error {
-                color: hsl(9, 100%, 64%);
+                background-color: hsl(9, 100%, 64%);
+                border-radius: 10px;
             }
         }
 
     }
 
     .progress-bar {
-        --progress-bar-clr: hsl(180 100% 50%)
-        --progress-txt-clr: hsl(0 0% 0%)
+        --progress-bar-clr: hsl(180, 100%, 50%)
+        --progress-txt-clr: hsl(0, 0%, 0%)
 
         width: 300px;
         height: 40px;
