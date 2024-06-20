@@ -53,7 +53,7 @@ Navigate to http://localhost:5000 (or the specified port).
 
 ### Example
 
-[showcase](./src/assets/showcase.mkv)
+[!showcase](https://github.com/SmolPeaCat/Video-Converter/assets/108297253/eae3b6c7-b08a-460c-ae97-9376ccff5030)
 
 ## Technologies Used
 
