@@ -1,4 +1,5 @@
 <script lang="ts">
+    // TODO add a way to convert images to gif
 	import { FFmpeg } from '@ffmpeg/ffmpeg';
     import {tweened} from "svelte/motion"
     import {fade} from 'svelte/transition'
