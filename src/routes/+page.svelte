@@ -99,6 +99,7 @@
         if (!data) return
 
         const files = data.files
+        console.log(files)
         if (files.length > 1 && checkFilesType(files)) {
             error = ""
             const imagesList: FileList =  event.dataTransfer.files
@@ -109,7 +110,7 @@
 
         }
 
-        else if (files[0].type == "video/webm") {
+        else if ( ["video/webm","video/x-matroska"].includes(files[0].type)) {
             error = ""
             console.log(files)
             const [file] = event.dataTransfer.files

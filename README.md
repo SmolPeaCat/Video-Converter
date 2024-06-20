@@ -2,11 +2,11 @@
 
 ## About
 
-Video and Image Converter is a web application built with Svelte and TypeScript that allows users to convert WebM videos to MP4 format and image sequences to GIFs. The project leverages FFmpeg.wasm for performing the conversions directly in the browser without the need for server-side processing.
+Video and Image Converter is a web application built with Svelte and TypeScript that allows users to convert videos to MP4 format and image sequences to GIFs. The project leverages FFmpeg.wasm for performing the conversions directly in the browser without the need for server-side processing.
 
 ## Features
 
-- Convert WebM videos to MP4 format.
+- Convert WebM/Mkv videos to MP4 format.
 - Convert sequences of PNG images to GIFs.
 - Drag and drop file support.
 - Progress indicator for conversions.
